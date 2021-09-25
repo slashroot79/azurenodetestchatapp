@@ -1,10 +1,13 @@
 const express = require('express');
+const cors = require('cors')
 const app = express();
 const port = 4000;
 var server = require('http').createServer(app);
 
-app.get('/',(req,res)=>{
-    res.send("Chat app..")
+app.use(cors())
+
+app.get('/test',(req,res)=>{
+    res.json({"host":req.headers.host, "method":req.method, "requrl":req.url, "statuscode":res.statusCode, "body":req.body })
 })
 
 var io = require('socket.io')(server, {
@@ -38,5 +41,5 @@ io.on('connection', (socket) => {
 
 
 server.listen(port, () => {
-    console.log(`Socket.IO server listening at http://localhost:${port}`) //External port determined after deployment to azure app service.
+    console.log(`Socket.IO server listening on container port : ${port}`) //External port determined after deployment to azure app service.
 });
